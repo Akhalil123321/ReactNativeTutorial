@@ -1,14 +1,28 @@
 import { useState } from 'react';
-import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-
+import {
+  Button, 
+  FlatList, 
+  StyleSheet, 
+  TextInput, 
+  View 
+} from 'react-native';
+import GoalItem from './Components/Goalitem';
 export default function App() {
-  const [text, setText] = useState('')
+  const [newGoal, setNewGoal] = useState('')
   const [list, setList] = useState([])
+  let i = 1
   const goalInputHandler = (textData) => {
-    setText(textData)
+    setNewGoal(textData)
   }
   const addGoalHandler = () => {
-    setList((currentList) => [...currentList, text])
+    setList((currentList) => [
+      ...currentList,
+      {text: newGoal, id: Math.random().toString()}
+    ])
+    clearText()
+  }
+  const clearText = () => {
+    setNewGoal('')
   }
   return (
     <View style={styles.cont}>
@@ -17,17 +31,27 @@ export default function App() {
           style={styles.ch2} 
           placeholder='Your course goal'
           onChangeText={goalInputHandler}
+          value={newGoal}
         />
         <Button title='Add Goal' onPress={addGoalHandler}/>
       </View>
-      <ScrollView style = {styles.ch3}>
+      {/* <ScrollView style = {styles.ch3}>
         {list.map((goal) =>(
-          <View key={goal} style = {styles.goal}>
+          <View key={goal} style = {styles.goalStyle}>
             <Text style = {styles.goalCh1}>{goal}</Text>
-            if 
           </View>
           ))}
-      </ScrollView>
+      </ScrollView> */}
+      <FlatList 
+      data={list}
+      renderItem={itemData => {
+        return<GoalItem />
+      }}
+      alwaysBounceVertical={false} 
+      keyExtractor={(item, index) => {
+        return item.id
+      }}
+      />
     </View> 
   );
 }
@@ -62,13 +86,5 @@ const styles = StyleSheet.create({
     display : 'flex',
     paddingTop : 10,    
   },
-  goal : {
-    margin : 6,
-    padding : 10,
-    borderRadius : 6,
-    backgroundColor : '#468CF9'
-  },
-  goalCh1 : {
-    color : '#fff'
-  }
+  
 });

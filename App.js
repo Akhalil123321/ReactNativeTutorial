@@ -35,17 +35,10 @@ export default function App() {
         />
         <Button title='Add Goal' onPress={addGoalHandler}/>
       </View>
-      {/* <ScrollView style = {styles.ch3}>
-        {list.map((goal) =>(
-          <View key={goal} style = {styles.goalStyle}>
-            <Text style = {styles.goalCh1}>{goal}</Text>
-          </View>
-          ))}
-      </ScrollView> */}
       <FlatList 
       data={list}
       renderItem={itemData => {
-        return<GoalItem />
+        return<GoalItem text = {itemData.item.text}/>
       }}
       alwaysBounceVertical={false} 
       keyExtractor={(item, index) => {

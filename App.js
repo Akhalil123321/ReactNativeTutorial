@@ -1,83 +1,40 @@
 import { useState } from 'react';
-import {
-  Button, 
-  FlatList, 
-  StyleSheet, 
-  TextInput, 
-  View 
-} from 'react-native';
-import GoalItem from './Components/Goalitem';
+import {FlatList, StyleSheet, View } from 'react-native';
+import GoalItem from './Components/GoalItem';
+import GoalInput from './Components/GoalInput'
 export default function App() {
-  const [newGoal, setNewGoal] = useState('')
-  const [list, setList] = useState([])
-  let i = 1
-  const goalInputHandler = (textData) => {
-    setNewGoal(textData)
-  }
-  const addGoalHandler = () => {
-    setList((currentList) => [
-      ...currentList,
-      {text: newGoal, id: Math.random().toString()}
-    ])
-    clearText()
-  }
-  const clearText = () => {
-    setNewGoal('')
-  }
+  const [courseGoals, setCourseGoals] = useState([]);
+function addGoalHandler(enteredGoalText) {
+setCourseGoals((currentCourseGoals) => [
+...currentCourseGoals,
+{ text: enteredGoalText, id: Math.random().toString() },
+]);
+}
   return (
-    <View style={styles.cont}>
-      <View style={styles.ch1}>
-        <TextInput 
-          style={styles.ch2} 
-          placeholder='Your course goal'
-          onChangeText={goalInputHandler}
-          value={newGoal}
+    <View style={styles.appContainer}>
+      <GoalInput onAddGoal={addGoalHandler} />
+      <View style={styles.goalsContainer}>
+        <FlatList
+        data={courseGoals}
+        renderItem={(itemData) => {
+        return <GoalItem text={itemData.item.text} />;
+        }}
+        keyExtractor={(item, index) => {
+        return item.id;
+        }}
+        alwaysBounceVertical={false}
         />
-        <Button title='Add Goal' onPress={addGoalHandler}/>
       </View>
-      <FlatList 
-      data={list}
-      renderItem={itemData => {
-        return<GoalItem text = {itemData.item.text}/>
-      }}
-      alwaysBounceVertical={false} 
-      keyExtractor={(item, index) => {
-        return item.id
-      }}
-      />
-    </View> 
+    </View>
   );
 }
-
 const styles = StyleSheet.create({
-  cont: {
-    display: 'flex',
-    alignItems: 'stretch',
-    flex : 1,
-    flexDirection : 'column',
-    gap : 50,
-    marginHorizontal :20,
-    marginTop : '20%',
-  },
-  ch1 : {
-    display : 'flex', 
-    flexDirection : 'row',
-    gap: 10,
-    justifyContent : 'space-around',
-    alignItems : 'center',
-  },
-  ch2 : {
-    borderWidth : 1,
-    borderColor : '#cccccc',
-    paddingHorizontal : 10,
-    paddingVertical : 5,
-    flex : 1,
-  },
-  ch3 : {
-    borderTopWidth : 2,
-    borderTopColor : '#cccccc',
-    display : 'flex',
-    paddingTop : 10,    
-  },
-  
-});
+  appContainer: {
+    flex: 1,
+    paddingTop: 50,
+    paddingHorizontal: 16,
+    },
+    goalsContainer: {
+      flex: 5,
+      },
+})
